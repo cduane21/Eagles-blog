@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>blog</title>
+		<meta name="author" content="Chris Duane">
+		<meta name="description" content="blog">
+		<meta name="keywords" content="blog">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="###">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Roboto:400,900italic,900,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
+		<%= stylesheet_link_tag "application.css" %>
+	</head>
+	<body>
+		<header>
+			<a href="/"><div class="headerText">EAGLES BLOG</div></a>
+			<div id="headerSubText"></div>
+		</header>
+		<h2>Original Post</h2>
+			<%= @post[:post_text] %> <br />
+			<%= @post[:user_name] %> <br />
+			<%=  @post[:created_at].localtime.strftime("%B %d  %Y, %l:%M %p") %><br />
+			<% if @post[:updated_at] != @post[:created_at] %>
+				<%= @post[:updated_at].localtime.strftime("Edited at %B %d  %Y, %l:%M %p") %><br />
+			<% end %>
+		<h2>Comments:</h2>
+			<ul>
+				<% @comments.each do |comment| %>
+				<li>
+					<div class"commentsContent">
+						<%= comment[:comment_text] %>
+						<%= comment[:created_at].localtime.strftime("%B %d  %Y, %l:%M %p") %><br />
+					</div>
+					<div class"commentUser">
+						&mdash;<%= comment[:user_name] %>
+					</div>
+				</li>
+			</ul>
+			<% end %>
+			<%= form_for @comment, url: "/comments/" << @comment.id.to_s, html: {method: :put} do |f| %>
+				<%=f.label :comment_text %><br />
+				<%=f.text_field :comment_text %>
+				<%=f.submit :change_comment %>
+			<% end %>
+			<a href=<%= "/delete_comment/"<< @comment.id.to_s %> > Delete this Comment</a></button>
+		<%= javascript_include_tag("application.js") %>
+	</body>
+</html>

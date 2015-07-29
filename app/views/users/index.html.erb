@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>blog</title>
+		<meta name="author" content="Chris Duane">
+		<meta name="description" content="blog">
+		<meta name="keywords" content="blog">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="###">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Roboto:400,900italic,900,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
+		<%= stylesheet_link_tag "application.css" %>
+	</head>
+	<body>
+		<header>
+			<a href="/"><div class="headerText">EAGLES BLOG</div></a>
+			<div id="headerSubText"></div>
+		</header>
+		<h1>Edit Profile</h1>
+		<%= form_for @user, url: "/users/" << @user.id.to_s, html: {method: :put} do |f| %>
+			<%=f.label :user_name %><br />
+			<%=f.text_field :user_name %>
+			<%=f.label :email %><br />
+			<%=f.text_field :email %><br />
+			<%=f.label :password %><br />
+			<%=f.password_field :password %><br />
+			<%=f.label :password_confirmation %><br />
+			<%=f.password_field :password_confirmation %><br />
+			<%=f.submit :update %>
+		<% end %>
+		<a href=<%= "/delete_user/"<< @user.id.to_s %> > Delete this User</a>
+		<%= javascript_include_tag("application.js") %>
+	</body>
+</html>

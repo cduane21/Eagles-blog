@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>blog</title>
+		<meta name="author" content="Chris Duane">
+		<meta name="description" content="blog">
+		<meta name="keywords" content="blog">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="###">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Roboto:400,900italic,900,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
+		<%= stylesheet_link_tag "application.css" %>
+	</head>
+	<body>
+		<header>
+			<a href="/"><div class="headerText">EAGLES BLOG</div></a>
+			<div id="headerSubText"></div>
+		</header>
+		<h1>Create new post.</h1>
+			<% if flash[:alert] %>
+				<div class="alert"><%= flash[:alert] %></div>
+			<% end %>
+			<%= form_tag( "/make_post", method: "post") do %>
+				<%=label_tag(:post_text) %>
+				<%=text_area_tag(:post_text) %>
+				<%=button_tag(:post, class: "makePost") %>
+			<% end %>
+			<div class="UserPostArea">
+				<ul>
+					<% @reversed_post.each do |post| %>
+					<li>
+						<div class"postContent">
+							<%= post[:post_text] %>
+						</div>
+						<div class"postName">
+							<a href="/posts/<%= post[:id] %>/edit">Edit Post</a>
+							<%= post[:user_name] %>&mdash;
+							<%=  post[:created_at].localtime.strftime("%B %d  %Y, %l:%M %p") %><br />
+							<% if post[:updated_at] != post[:created_at] %>
+								<%= post[:updated_at].localtime.strftime("Edited at %B %d  %Y, %l:%M %p") %><br />
+							<% end %>
+							<div>
+							<% post.comments.each do |comment| %>
+								<% @user = User.find_by(id: session[:user_id]) %>
+								<%= comment[:comment_text] %> &mdash;
+								<%= comment[:user_name] %><br />
+								<%= comment[:created_at].localtime.strftime("%B %d  %Y, %l:%M %p") %><br />
+									<% if !@user.nil? && @user.id == comment[:user_id] %>
+										<a href="/comments/<%= comment[:id] %>/edit">Edit Comment</a><br />
+									<% end %>
+								<% end %>
+							</div>
+						</div>
+					</li>
+					<% end %>
+				</ul>	
+			</div>
+		<%= javascript_include_tag("application.js") %>
+	</body>
+</html>

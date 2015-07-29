@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>blog</title>
+		<meta name="author" content="Chris Duane">
+		<meta name="description" content="blog">
+		<meta name="keywords" content="blog">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="###">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<%= stylesheet_link_tag "application.css" %>
+	</head>
+	<body>
+		<header>
+			<a href="/"><div class="headerText">EAGLES BLOG</div></a>
+			<div id="headerSubText"></div>
+		</header>
+		<h1>New User Sign Up</h1>
+			<p><%= form_for User.new do |f| %></p>
+			<p><%=f.label :user_name %></p>
+			<p><%=f.text_field :user_name %></p>
+			<p><%=f.label :email %></p>
+			<p><%=f.text_field :email %></p>
+			<p><%=f.label :password %></p>
+			<p><%=f.password_field :password %></p>
+			<p><%=f.label :password_confirmation %></p>
+			<p><%=f.password_field :password_confirmation %></p>
+			<p><%=f.submit :create %></p>
+			<% end %>
+
+				<% if !@user.nil? && @user.errors.full_messages.any? %>
+				<ul>
+					<%= @user.errors.full_messages.each do |error_message| %>
+					<li><%= error_message %></li><br />
+					<% end %>
+				</ul>
+				<% end %>
+
+			<%= javascript_include_tag("main.js") %>
+	</body>
+</html>

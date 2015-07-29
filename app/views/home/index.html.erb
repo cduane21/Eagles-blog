@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>blog</title>
+		<meta name="author" content="Chris Duane">
+		<meta name="description" content="blog">
+		<meta name="keywords" content="blog">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="###">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<%= stylesheet_link_tag "application.css" %>
+	</head>
+	<body>
+		<header> 
+			<a href="/"><div class="headerText">EAGLES BLOG</div></a>
+			<div id="headerSubText"></div>
+		</header>
+		<nav class="loginNav">
+			<ul>
+				<li>
+					<% if flash[:notice] %>
+			    	<div class="alert"><%= flash[:notice] %></div>
+			  	<% end %>
+				</li>
+				<li>	
+					<% if @user.nil? %>
+							<%= form_tag("/login", method: "post") do %>
+								<%=label_tag(:user_name) %>
+								<%=text_field_tag(:user_name) %>
+								<%=label_tag(:password) %>
+								<%=text_field_tag(:password) %>
+								<%=submit_tag(:login) %>
+							<% end %>
+						<% end %>
+					</li>
+					<li>
+						<% if !@user.nil? %>
+							<a href="/logout">Logout</a>
+						<% end %>
+					</li>
+					<li>
+						<% if !@user.nil? %>
+							<a href="/user">Edit Account</a>
+						<% end %>
+					</li>
+					<li>
+						<% if @user.nil? %>
+							<button><a href="/new_user">Sign up</a></button>
+						<% end %>
+					</li>	
+				</ul>	
+			</nav>
+
+			<% if !@user.nil? %>
+				<a href="/post">Write a new Post!</a>
+			<% end %>
+
+			<div class="postArea">
+				<ul>
+				<% @feed.each do |post| %>
+					<li>
+						<div class"postContent">
+							<%= post[:post_text] %> <br />
+							<%= post[:created_at].localtime.strftime("%B %d  %Y, %l:%M %p") %><br />
+							<% if post[:updated_at] != post[:created_at] %>
+								<%= post[:updated_at].localtime.strftime("Edited at %B %d  %Y, %l:%M %p") %><br />
+							<% end %>
+						</div>
+						<div class"postName">
+							&mdash;<%= post[:user_name] %>
+							<% if !@user.nil? && @user.id == post[:user_id] %>
+								<a href="/posts/<%= post[:id] %>/edit">Edit Post</a>
+							<% end %>
+						</div>
+						<div>
+							<% post.comments.each do |comment| %>
+								<% @user = User.find_by(id: session[:user_id]) %>
+								<%= comment[:comment_text] %> &mdash;
+								<%= comment[:user_name] %><br />
+								<%= comment[:created_at].localtime.strftime("%B %d  %Y, %l:%M %p") %><br />
+									<% if !@user.nil? && @user.id == comment[:user_id] %>
+										<a href="/comments/<%= comment[:id] %>/edit">Edit Comment</a><br />
+									<% end %>
+								<% end %>
+							</div>
+							<% if !@user.nil? %>
+								<a href="/comment/<%= post[:id] %>/">Comment</a>
+							<% end %>
+					</li>
+				<% end %>
+				</ul>	
+			</div>
+		<%= javascript_include_tag("application.js") %>
+	</body>
+</html>
